@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: aloha
+  labels:
+    monitoring: infra
+  namespace: luka
+spec:
+  jobLabel: aloha-metrics
+  selector:
+    matchLabels:
+      app: aloha
+  namespaceSelector:
+    matchNames:
+    - luka
+  endpoints:
+  - targetPort: 8090
+    path: /metrics

@@ -1,0 +1,49 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aloha-deployment
+  labels:
+    app: aloha
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: aloha
+  template:
+    metadata:
+      labels:
+        app: aloha
+      annotations:
+        prometheus.io/scrape: 'true'
+    spec:
+      containers:
+      - name: aloha
+        image: lukapiske/aloha:latest
+        imagePullPolicy: Always
+        command:
+          - ./aloha
+        ports:
+        - containerPort: 8090
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8090
+          initialDelaySeconds: 1
+          periodSeconds: 2
+          failureThreshold: 1
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8090
+          initialDelaySeconds: 1
+          periodSeconds: 3
+          failureThreshold: 2
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "3m"
+          limits:
+            memory: "256Mi"
+            cpu: "100m"

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: aloha
+  labels:
+    app: aloha
+spec:
+  type: NodePort
+  ports:
+    - port: 8090
+      targetPort: 8090
+      nodePort: 31195
+      protocol: TCP
+  selector:
+    app: aloha

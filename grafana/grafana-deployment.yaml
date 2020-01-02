@@ -1,0 +1,59 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+      name: grafana
+    spec:
+      containers:
+        - name: grafana
+          image: grafana/grafana:latest
+          ports:
+            - containerPort: 3000
+              name: web
+              protocol: TCP
+          resources:
+            requests:
+              cpu: "1"
+              memory: 100Mi
+            limits:
+              memory: 1000Mi
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /api/health
+              port: web
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 15
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /api/health
+              port: web
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 10
+          volumeMounts:
+            - mountPath: /data
+              name: data
+            - mountPath: /dashboards
+              name: dashboards
+      volumes:
+        - emptyDir: {}
+          name: data
+        - emptyDir: {}
+          name: dashboards

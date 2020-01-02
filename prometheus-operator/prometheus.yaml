@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: prometheus
+  labels:
+    prometheus: prometheus
+  namespace: monitoring
+spec:
+  replicas: 2
+  serviceAccountName: prometheus
+  serviceMonitorNamespaceSelector:
+    matchLabels:
+      prometheus: monitored
+  serviceMonitorSelector:
+    matchExpressions:
+    - key: monitoring
+      operator: In
+      values:
+      - infra
+

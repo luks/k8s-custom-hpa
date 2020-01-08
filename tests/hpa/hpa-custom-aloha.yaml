@@ -2,16 +2,16 @@
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: podinfo
+  name: aloha-custom-hpa
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: aloha
+    name: aloha-deployment
   minReplicas: 2
   maxReplicas: 10
   metrics:
   - type: Pods
     pods:
-      metricName: aloha_http_requests
-      targetAverageValue: 3
+      metricName: aloha_requests
+      targetAverageValue: 10

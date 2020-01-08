@@ -15,7 +15,7 @@ spec:
       labels:
         app: aloha
       annotations:
-        prometheus.io/scrape: 'true'
+        scif.io/scrape: 'true'
     spec:
       containers:
       - name: aloha

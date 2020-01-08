@@ -1,0 +1,28 @@
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: aloha
+  annotations:
+    # This annotation is optional.
+    # If specified, then this prometheus server is used,
+    # instead of the prometheus server specified as the CLI argument `--prometheus-server`.
+    metric-config.external.prometheus-query.prometheus/prometheus-server: http://k8st1-prometheus.ko.seznam.cz
+    # metric-config.<metricType>.<metricName>.<collectorName>/<configKey>
+    # <configKey> == query-name
+    metric-config.external.prometheus-query.prometheus/aloha-total-request-per-second: |
+      scalar(sum(increase(aloha_requests_total[1m])))
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: aloha-deployment
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: External
+    external:
+      metricName: prometheus-query
+      metricSelector:
+        matchLabels:
+          query-name: aloha-total-request-per-second
+      targetAverageValue: 10

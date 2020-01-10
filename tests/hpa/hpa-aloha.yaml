@@ -19,3 +19,31 @@ spec:
     resource:
       name: memory
       targetAverageValue: 200Mi
+
+
+# 
+# apiVersion: autoscaling/v2beta2
+# kind: HorizontalPodAutoscaler
+# metadata:
+#   name: myapp-hpa
+#   namespace: default
+# spec:
+#   minReplicas: 1
+#   maxReplicas: 3
+#   metrics:
+#   - resource:
+#       name: cpu
+#       target:
+#         averageUtilization: 70
+#         type: Utilization
+#     type: Resource
+#   - resource:
+#       name: memory
+#       target:
+#         averageUtilization: 70
+#         type: Utilization
+#     type: Resource
+#   scaleTargetRef:
+#     apiVersion: extensions/v1beta1
+#     kind: Deployment
+#     name: myapp
